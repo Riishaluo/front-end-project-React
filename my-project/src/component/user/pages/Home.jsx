@@ -1,13 +1,13 @@
-import NavBar from "../../../HomeComponent/navBar";
-import Header from "../../../HomeComponent/header";
-import DisplayProducts from "../../../HomeComponent/productList";
-import Footer from "../../../HomeComponent/footer";
+import Navbar from "../HomeComponent/navBar";
+import Header from "../HomeComponent/header"
+import DisplayProducts from "../HomeComponent/productList";
+import Footer from "../HomeComponent/footer";
 
 
 function Home() {
     return (
         <div>
-            <NavBar />
+            <Navbar />
             <Header/>
             <DisplayProducts/>
             <Footer/>

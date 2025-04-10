@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Navbar from "../../../HomeComponent/navBar";
-import Footer from "../../../HomeComponent/footer";
+import Navbar from "../HomeComponent/navBar";
+import Footer from "../HomeComponent/footer";
 
 
 export default function ProductDetails() {
