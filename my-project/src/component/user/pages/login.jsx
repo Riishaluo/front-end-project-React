@@ -1,13 +1,19 @@
-import React,{useState} from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-
 export default function Login() {
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("userId");
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -27,21 +33,26 @@ export default function Login() {
         const users = response.data;
 
         const matchedUser = users.find(
-          (user) => user.email === values.email && user.password === values.password
+          (user) =>
+            user.email === values.email && user.password === values.password
         );
 
-        if(matchedUser){
-          await axios.patch(`http://localhost:3000/users/${matchedUser.id}`,{
-            isLogged : true,
-            cart : []
-          })
+        if (matchedUser) {
+          if (matchedUser.isBlocked) {
+            setErrorMessage("⚠ Your account has been blocked. Please contact support.");
+            return;
+          }
+
+          await axios.patch(`http://localhost:3000/users/${matchedUser.id}`, {
+            isLogged: true,
+            cart: [],
+          });
 
           localStorage.setItem("userId", matchedUser.id);
-
-          setErrorMessage(""); 
+          setErrorMessage("");
           navigate("/");
         } else {
-          setErrorMessage("Invalid email or password!"); 
+          setErrorMessage("Invalid email or password!");
         }
       } catch (err) {
         setErrorMessage("Please try again!");
@@ -68,11 +79,10 @@ export default function Login() {
             <input
               type="email"
               name="email"
-              className={`w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 ${
-                formik.touched.email && formik.errors.email
+              className={`w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 ${formik.touched.email && formik.errors.email
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-300 focus:ring-blue-500"
-              }`}
+                }`}
               placeholder="Enter your email"
               {...formik.getFieldProps("email")}
             />
@@ -86,11 +96,10 @@ export default function Login() {
             <input
               type="password"
               name="password"
-              className={`w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 ${
-                formik.touched.password && formik.errors.password
+              className={`w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 ${formik.touched.password && formik.errors.password
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-300 focus:ring-blue-500"
-              }`}
+                }`}
               placeholder="Enter your password"
               {...formik.getFieldProps("password")}
             />

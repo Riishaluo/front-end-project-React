@@ -1,21 +1,12 @@
 {
   "products": [
     {
-      "id": "1",
-      "name": "Sofa Interiordefine",
-      "price": 299,
-      "image": "https://www.interiordefine.com/media/catalog/product/g/a/gaby.fabric.sofa.2seat_1.jpg?store=default&image-type=small_image&auto=webp&format=pjpg&width=340&height=234&fit=cover",
-      "category": "sofa",
-      "quantity": 1,
-      "description": "A modern and minimalistic two-seater sofa designed for comfort and elegance. Perfect for compact living rooms or studio apartments."
-    },
-    {
       "id": "2",
       "name": "Sofa Heavenly",
       "price": 499,
       "image": "https://images.havenly.com/unsafe/fit-in/963x963/filters:format(webp):quality(100)/https://static.havenly.com/product/production/sha256_20e3842c6234dac30a928b4351050436bb37b5c6c3faf7ea00b3d285030345f6.jpeg",
       "category": "sofa",
-      "quantity": 1,
+      "quantity": 5,
       "description": "Experience heavenly comfort with this plush sofa. Upholstered in premium fabric, it’s ideal for luxurious lounging."
     },
     {
@@ -33,7 +24,7 @@
       "price": 399,
       "image": "https://img.freepik.com/premium-photo/wood-twin-panel-bed-with-bedding-isolated-white-background_548646-131000.jpg",
       "category": "bed",
-      "quantity": 1,
+      "quantity": 3,
       "description": "Crafted with elegant wooden panels, the Double Royal bed offers both durability and a classic touch to your bedroom decor."
     },
     {
@@ -80,77 +71,59 @@
       "category": "dining",
       "quantity": 1,
       "description": "A space-saving dining table crafted with sleek lines and wooden finish — perfect for modern compact spaces."
+    },
+    {
+      "id": "41f2",
+      "name": "New Product",
+      "price": 299,
+      "image": "https://images.havenly.com/unsafe/fit-in/963x963/filters:format(webp):quality(100)/https://static.havenly.com/product/production/sha256_20e3842c6234dac30a928b4351050436bb37b5c6c3faf7ea00b3d285030345f6.jpeg",
+      "category": "sofa",
+      "quantity": "10",
+      "description": "The heavenly sofa made up of cotton cool carsdest product"
     }
   ],
   "users": [
     {
-      "id": "3302",
-      "username": "rishal",
-      "email": "riishaluo@gmail.com",
-      "password": "123456",
-      "isLogged": true,
-      "cart": [
-        {
-          "id": "2",
-          "name": "Sofa Heavenly",
-          "price": 499,
-          "image": "https://images.havenly.com/unsafe/fit-in/963x963/filters:format(webp):quality(100)/https://static.havenly.com/product/production/sha256_20e3842c6234dac30a928b4351050436bb37b5c6c3faf7ea00b3d285030345f6.jpeg",
-          "category": "sofa",
-          "quantity": 3,
-          "description": "Experience heavenly comfort with this plush sofa. Upholstered in premium fabric, it’s ideal for luxurious lounging."
-        }
-      ],
-      "price": 998
-    },
-    {
-      "id": "3236",
+      "id": "898d",
       "username": "Muhammed Rishal Kp",
       "email": "mohdrishal9562@gmail.com",
       "password": "123456",
       "isLogged": false,
-      "cart": [
-        {
-          "id": "2",
-          "name": "Sofa Heavenly",
-          "price": 499,
-          "image": "https://images.havenly.com/unsafe/fit-in/963x963/filters:format(webp):quality(100)/https://static.havenly.com/product/production/sha256_20e3842c6234dac30a928b4351050436bb37b5c6c3faf7ea00b3d285030345f6.jpeg",
-          "category": "sofa",
-          "quantity": 1,
-          "description": "Experience heavenly comfort with this plush sofa. Upholstered in premium fabric, it’s ideal for luxurious lounging."
-        },
-        {
-          "id": "1",
-          "name": "Sofa Interiordefine",
-          "price": 299,
-          "image": "https://www.interiordefine.com/media/catalog/product/g/a/gaby.fabric.sofa.2seat_1.jpg?store=default&image-type=small_image&auto=webp&format=pjpg&width=340&height=234&fit=cover",
-          "category": "sofa",
-          "quantity": 1,
-          "description": "A modern and minimalistic two-seater sofa designed for comfort and elegance. Perfect for compact living rooms or studio apartments."
-        }
-      ]
+      "cart": [],
+      "isBlocked": false
     }
   ],
   "orderList": [
     {
-      "id": "3cfb",
+      "id": "36a9",
       "fullName": "Muhammed Rishal Kp",
       "address": "Kerala",
       "pincode": "673572",
       "cardNumber": "1234567890123451",
       "cvv": "123",
-      "userId": "3302",
-      "totalAmount": 499,
+      "userId": "898d",
+      "totalAmount": 1396,
       "cart": [
         {
-          "id": "2",
-          "name": "Sofa Heavenly",
-          "price": 499,
-          "image": "https://images.havenly.com/unsafe/fit-in/963x963/filters:format(webp):quality(100)/https://static.havenly.com/product/production/sha256_20e3842c6234dac30a928b4351050436bb37b5c6c3faf7ea00b3d285030345f6.jpeg",
+          "id": "3",
+          "name": "Sofa Hybrid",
+          "price": 199,
+          "image": "https://images.havenly.com/unsafe/fit-in/963x963/filters:format(webp):quality(100)/https://static.havenly.com/product/production/sha256_746cc2019d57faff6a8912febd2b886c5f08012b8624c3a06cca2352ee6c2081.jpeg",
           "category": "sofa",
           "quantity": 1,
-          "description": "Experience heavenly comfort with this plush sofa. Upholstered in premium fabric, it’s ideal for luxurious lounging."
+          "description": "A perfect blend of style and functionality, this hybrid sofa combines contemporary design with everyday comfort."
+        },
+        {
+          "id": "4",
+          "name": "Double Royal",
+          "price": 399,
+          "image": "https://img.freepik.com/premium-photo/wood-twin-panel-bed-with-bedding-isolated-white-background_548646-131000.jpg",
+          "category": "bed",
+          "quantity": 3,
+          "description": "Crafted with elegant wooden panels, the Double Royal bed offers both durability and a classic touch to your bedroom decor."
         }
-      ]
+      ],
+      "createdAt": "2025-04-15T04:35:27.716Z"
     }
   ]
 }

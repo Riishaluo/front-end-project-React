@@ -18,17 +18,29 @@ function Sidebar() {
         </li>
         <li
           onClick={() => {
-            console.log("Clicked Products");
             navigate("/admin/product");
           }}
           className="hover:bg-gray-700 p-3 rounded cursor-pointer transition"
         >
           Products
         </li>
-        <li className="hover:bg-gray-700 p-3 rounded cursor-pointer transition">
+        <li onClick={() => {
+          navigate("/admin/user")
+        }} className="hover:bg-gray-700 p-3 rounded cursor-pointer transition">
           User
         </li>
-        <li className="hover:bg-red-600 p-3 rounded cursor-pointer transition">
+        <li onClick={() => {
+          navigate("/admin/orderList")
+        }} className="hover:bg-gray-700 p-3 rounded cursor-pointer transition">
+          Orders
+        </li>
+        <li
+          onClick={() => {
+            localStorage.removeItem("isAdminLoggedIn");
+            navigate("/admin/login");
+          }}
+          className="hover:bg-red-600 p-3 rounded cursor-pointer transition"
+        >
           Logout
         </li>
       </ul>

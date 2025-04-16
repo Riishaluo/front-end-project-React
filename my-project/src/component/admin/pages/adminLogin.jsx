@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,15 @@ import { useNavigate } from "react-router-dom";
 function AdminLogin() {
     const [loginError, setLoginError] = useState("");
     const navigate = useNavigate()
+
+    const isLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
+    console.log(isLoggedIn)
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/admin/dashboard", { replace: true });
+        }
+    }, [isLoggedIn, navigate]);
+
 
     const predefinedEmail = "admin@gmail.com";
     const predefinedPassword = "admin123";
@@ -29,6 +38,7 @@ function AdminLogin() {
             values.email === predefinedEmail &&
             values.password === predefinedPassword
         ) {
+            localStorage.setItem("isAdminLoggedIn", "true")
             navigate("/admin/dashboard")
             setLoginError("");
         } else {

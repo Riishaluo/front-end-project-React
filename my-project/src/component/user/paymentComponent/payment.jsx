@@ -45,7 +45,8 @@ export default function Payment() {
                     ...values,
                     userId,
                     totalAmount: totalPrice,
-                    cart: cart
+                    cart: cart,
+                    createdAt: new Date().toISOString()
                 });
         
                 await axios.patch(`http://localhost:3000/users/${userId}`, {

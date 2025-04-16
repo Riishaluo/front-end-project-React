@@ -26,7 +26,6 @@ export default function CartSection() {
 
     const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-
     const updateCartCount = async (id, updatedQuantity) => {
 
         const updatedCart = cart.map((product) => {
