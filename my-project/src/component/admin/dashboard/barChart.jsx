@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import {
   BarChart,
   Bar,
@@ -7,27 +7,26 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
-} from "recharts";
-import Sidebar from "../commonComponent/sideBar";
-import axios from "axios";
+} from "recharts"
+import Sidebar from "../commonComponent/sideBar"
+import axios from "axios"
 
 function Dashboard() {
-  const [salesData, setSalesData] = useState([]);
-
+  const [salesData, setSalesData] = useState([])
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/orderList");
-        const orders = res.data;
+        const res = await axios.get("http://localhost:3000/orderList")
+        const orders = res.data
 
-        const monthlySales = Array(12).fill(0);
+        const monthlySales = Array(12).fill(0)
         orders.forEach((order) => {
           if (order.createdAt) {
-            const date = new Date(order.createdAt);
-            const monthIndex = date.getMonth();
-            monthlySales[monthIndex] += order.totalAmount || 0;
+            const date = new Date(order.createdAt)
+            const monthIndex = date.getMonth()
+            monthlySales[monthIndex] += order.totalAmount || 0
           }
-        });
+        })
 
         const formattedData = [
           "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -35,16 +34,16 @@ function Dashboard() {
         ].map((month, index) => ({
           name: month,
           sales: monthlySales[index],
-        }));
+        }))
 
-        setSalesData(formattedData);
+        setSalesData(formattedData)
       } catch (error) {
-        console.error("Error fetching sales data", error);
+        console.error("Error fetching sales data", error)
       }
-    };
+    }
 
-    fetchOrders();
-  }, []);
+    fetchOrders()
+  }, [])
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -69,7 +68,7 @@ function Dashboard() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Dashboard;
+export default Dashboard

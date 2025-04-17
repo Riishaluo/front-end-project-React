@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import Sidebar from "../commonComponent/sideBar";
-import axios from "axios";
+import React, { useState, useEffect } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import Sidebar from "../commonComponent/sideBar"
+import axios from "axios"
 
 function EditProduct() {
     const navigate = useNavigate()
-  const { id } = useParams();
+  const { id } = useParams()
   const [product, setProduct] = useState({
     name: "",
     price: "",
@@ -13,41 +13,41 @@ function EditProduct() {
     category: "",
     quantity: "",
     description: ""
-  });
+  })
 
   useEffect(() => {
     const fetchProduct = async () => {
-      try {
-        const res = await axios.get(`http://localhost:3000/products/${id}`);
-        setProduct(res.data);
+      try { 
+        const res = await axios.get(`http://localhost:3000/products/${id}`)
+        setProduct(res.data)
       } catch (error) {
-        console.error("Error fetching product:", error);
+        console.error("Error fetching product:", error)
       }
-    };
-    fetchProduct();
-  }, [id]);
+    }
+    fetchProduct()
+  }, [id])
 
   const handleChange = (e) => {
     const {name,value} = e.target
     const newValue =
     name === "price" || name === "quantity"
-      ? parseFloat(value) || 0
-      : value;
+      ? parseFloat(value)
+      : value
 
-  setProduct({ ...product, [name]: newValue });
-};
+  setProduct({ ...product, [name]: newValue })
+}
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      await axios.put(`http://localhost:3000/products/${id}`, product);
-      alert("Product updated successfully!");
-      navigate("/admin/product");
+      await axios.put(`http://localhost:3000/products/${id}`, product)
+      alert("Product updated successfully!")
+      navigate("/admin/product")
     } catch (error) {
-      console.error("Error updating product:", error);
-      alert("Failed to update product");
+      console.error("Error updating product:", error)
+      alert("Failed to update product")
     }
-  };
+  }
 
 
   return (
@@ -140,7 +140,7 @@ function EditProduct() {
         </button>
       </form>
     </div>
-  );
+  )
 }
 
-export default EditProduct;
+export default EditProduct

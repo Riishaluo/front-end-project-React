@@ -1,33 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import Sidebar from '../admin/commonComponent/sideBar';
-import {Link} from "react-router-dom"
-import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import Sidebar from '../admin/commonComponent/sideBar'
+import { Link } from "react-router-dom"
+import axios from 'axios'
 
 function UserOrders() {
-
-    const [orders, setOrders] = useState([]);
-    const [user, setUser] = useState([]);
+    const [orders, setOrders] = useState([])
+    const [user, setUser] = useState([])
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const res = await axios.get("http://localhost:3000/users");
-            setUser(res.data);
-        };
-        fetchUsers();
-    }, []);
+            const res = await axios.get("http://localhost:3000/users")
+            setUser(res.data)
+        }
+        fetchUsers()
+    }, [])
 
     useEffect(() => {
         const fetchUserOrders = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/orderList");
-                setOrders(res.data);
+                const res = await axios.get("http://localhost:3000/orderList")
+                setOrders(res.data)
             } catch (err) {
-                alert(err);
+                alert(err)
             }
-        };
+        }
 
-        fetchUserOrders();
-    }, []);
+        fetchUserOrders()
+    }, [])
 
     return (
         <div className="flex min-h-screen bg-gray-100">
@@ -50,7 +49,7 @@ function UserOrders() {
                         </thead>
                         <tbody>
                             {orders.map((order, index) => {
-                                const matchedUser = user.find(u => u.id === order.userId);
+                                const matchedUser = user.find(u => u.id === order.userId)
 
                                 return (
                                     <tr key={index} className="hover:bg-gray-100 transition-all border-b">
@@ -69,14 +68,14 @@ function UserOrders() {
                                             </Link>
                                         </td>
                                     </tr>
-                                );
+                                )
                             })}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default UserOrders;
+export default UserOrders

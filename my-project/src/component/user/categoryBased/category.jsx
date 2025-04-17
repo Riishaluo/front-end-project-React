@@ -1,39 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import axios from "axios";
-import Navbar from "../HomeComponent/navBar";
+import React, { useEffect, useState } from "react"
+import { useParams, Link } from "react-router-dom"
+import axios from "axios"
+import Navbar from "../HomeComponent/navBar"
 import Footer from "../HomeComponent/footer"
 
 export default function CategoryPage() {
-    const { categoryName } = useParams();
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [searchItem, setSearchItem] = useState("");
-    const [minPrice, setMinPrice] = useState("");
-    const [maxPrice, setMaxPrice] = useState("");
+    const { categoryName } = useParams()
+    const [filteredProducts, setFilteredProducts] = useState([])
+    const [searchItem, setSearchItem] = useState("")
+    const [minPrice, setMinPrice] = useState("")
+    const [maxPrice, setMaxPrice] = useState("")
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/products");
-                const products = response.data;
+                const response = await axios.get("http://localhost:3000/products")
+                const products = response.data
                 const filtered = products.filter(product =>
                     product.category.toLowerCase() === categoryName.toLowerCase()
-                );
-                setFilteredProducts(filtered);
+                )
+                setFilteredProducts(filtered)
             } catch (err) {
-                console.error("Failed to fetch products:", err);
+                console.error("Failed to fetch products:", err)
             }
-        };
+        }
 
-        fetchProducts();
-    }, [categoryName]);
+        fetchProducts()
+    }, [categoryName])
 
     const displayedProducts = filteredProducts.filter(product => {
-        const matchesSearch = product.name.toLowerCase().includes(searchItem.toLowerCase());
-        const matchesMin = minPrice ? product.price >= parseInt(minPrice) : true;
-        const matchesMax = maxPrice ? product.price <= parseInt(maxPrice) : true;
-        return matchesSearch && matchesMin && matchesMax;
-    });
+        const matchesSearch = product.name.toLowerCase().includes(searchItem.toLowerCase())
+        const matchesMin = minPrice ? product.price >= parseInt(minPrice) : true
+        const matchesMax = maxPrice ? product.price <= parseInt(maxPrice) : true
+        return matchesSearch && matchesMin && matchesMax
+    })
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -89,5 +89,5 @@ export default function CategoryPage() {
             </div>
             <Footer />
         </div>
-    );
+    )
 }

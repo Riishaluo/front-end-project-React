@@ -13,25 +13,25 @@ function DashboardLayout() {
         const fetchUsers = async () => {
             try {
                 const res = await axios.get("http://localhost:3000/users")
-                setUsers(res.data);
+                setUsers(res.data)
                 console.log("Total Users:", res.data.length)
             } catch (err) {
                 console.error("Error fetching users:", err)
             }
-        };
+        }
 
-        fetchUsers();
-    }, []);
+        fetchUsers()
+    }, [])
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 const res = await axios.get("http://localhost:3000/products")
-                setProducts(res.data);
+                setProducts(res.data)
             } catch (err) {
                 console.error("Error fetching products:", err)
             }
-        };
+        }
 
         fetchProducts()
     }, [])
@@ -41,16 +41,16 @@ useEffect(() => {
     const fetchOrders = async () => {
       try {
         const res = await axios.get("http://localhost:3000/orderList")
-        setOrders(res.data);
+        setOrders(res.data)
   
         const total = res.data.reduce((sum, order) => sum + Number(order.totalAmount), 0)
         setTotalSales(total)    
       } catch (err) {
         console.error("Error fetching orders:", err)
       }
-    };
+    }
   
-    fetchOrders();
+    fetchOrders()
   }, [])
 
     return (
@@ -75,7 +75,7 @@ useEffect(() => {
                 <BarChartComponent />
             </div>
         </div>
-    );
+    )
 }
 
-export default DashboardLayout;
+export default DashboardLayout

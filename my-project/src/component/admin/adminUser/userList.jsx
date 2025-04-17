@@ -1,6 +1,6 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import Sidebar from "../commonComponent/sideBar";
+import axios from "axios"
+import React, { useEffect, useState } from "react"
+import Sidebar from "../commonComponent/sideBar"
 
 
 
@@ -19,23 +19,23 @@ function UserList() {
 
 
     const handleBlockToggle = async (index) => {
-        const updatedUsers = [...user];
-        const selectedUser = updatedUsers[index];
+        const updatedUsers = [...user]
+        const selectedUser = updatedUsers[index]
 
-        selectedUser.isBlocked = !selectedUser.isBlocked;
+        selectedUser.isBlocked = !selectedUser.isBlocked
 
         try {
-            setUser(updatedUsers);
+            setUser(updatedUsers)
 
             await axios.patch(`http://localhost:3000/users/${selectedUser.id}`, {
                 isBlocked: selectedUser.isBlocked,
-            });
+            })
 
-            console.log("User status updated in DB");
+            console.log("User status updated in DB")
         } catch (error) {
-            console.error("Error updating user status:", error);
+            console.error("Error updating user status:", error)
         }
-    };
+    }
 
 
     return <div className="flex min-h-screen">

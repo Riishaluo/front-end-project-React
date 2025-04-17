@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import axios from "axios";
+import axios from "axios"
 
 export default function CartSection() {
 
@@ -24,7 +24,7 @@ export default function CartSection() {
         fetchCartItem()
     }, [])
 
-    const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
     const updateCartCount = async (id, updatedQuantity) => {
 
@@ -39,9 +39,9 @@ export default function CartSection() {
                 price: totalPrice
             })
 
-            console.log(data);
+            console.log(data)
 
-            console.log("hai ");
+            console.log("hai ")
         } catch (err) {
             alert(err)
         }
@@ -49,16 +49,16 @@ export default function CartSection() {
 
 
     const handleRemoveItem = (productId) => {
-        const updatedCart = cart.filter((item) => item.id !== productId);
+        const updatedCart = cart.filter((item) => item.id !== productId)
 
         axios.patch(`http://localhost:3000/users/${userId}`, {
             cart: updatedCart,
         })
             .then(() => {
-                setCartItem(updatedCart);
+                setCartItem(updatedCart)
             })
-            .catch((err) => alert("Failed to remove item: " + err));
-    };
+            .catch((err) => alert("Failed to remove item: " + err))
+    }
 
     return (
         <div className="flex flex-col lg:flex-row max-w-7xl mx-auto p-4 sm:p-6 gap-6 sm:gap-8">
@@ -119,7 +119,7 @@ export default function CartSection() {
                                 </div>
                             </div>
                         </div>
-                    );
+                    )
                 })}
             </div>
     
@@ -160,6 +160,6 @@ export default function CartSection() {
                 )}
             </div>
         </div>
-    );
+    )
     
 }

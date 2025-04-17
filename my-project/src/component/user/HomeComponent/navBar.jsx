@@ -78,7 +78,6 @@ export default function Navbar() {
                             <div onClick={() => setDropdownOpen(!dropdownOpen)}>
                                 {loggedIn.username}
                             </div>
-
                             {dropdownOpen && (
                                 <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg border z-20">
                                     <ul className="py-2 text-sm text-gray-700">

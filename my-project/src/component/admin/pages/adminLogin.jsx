@@ -1,23 +1,23 @@
-import React, { useState,useEffect } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import React, { useState,useEffect } from "react"
+import { Formik, Form, Field, ErrorMessage } from "formik"
+import * as Yup from "yup"
+import { useNavigate } from "react-router-dom"
 
 function AdminLogin() {
-    const [loginError, setLoginError] = useState("");
+    const [loginError, setLoginError] = useState("")
     const navigate = useNavigate()
 
-    const isLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
+    const isLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true"
     console.log(isLoggedIn)
     useEffect(() => {
         if (isLoggedIn) {
-            navigate("/admin/dashboard", { replace: true });
+            navigate("/admin/dashboard", { replace: true })
         }
-    }, [isLoggedIn, navigate]);
+    }, [isLoggedIn, navigate])
 
 
-    const predefinedEmail = "admin@gmail.com";
-    const predefinedPassword = "admin123";
+    const predefinedEmail = "admin@gmail.com"
+    const predefinedPassword = "admin123"
 
     const validationSchema = Yup.object({
         email: Yup.string()
@@ -26,12 +26,12 @@ function AdminLogin() {
         password: Yup.string()
             .min(6, "Password must be at least 6 characters")
             .required("Password is required"),
-    });
+    })
 
     const initialValues = {
         email: "",
         password: "",
-    };
+    }
 
     const handleSubmit = (values) => {
         if (
@@ -40,9 +40,9 @@ function AdminLogin() {
         ) {
             localStorage.setItem("isAdminLoggedIn", "true")
             navigate("/admin/dashboard")
-            setLoginError("");
+            setLoginError("")
         } else {
-            setLoginError("Invalid email or password");
+            setLoginError("Invalid email or password")
         }
     }
 
@@ -105,7 +105,7 @@ function AdminLogin() {
                 </Formik>
             </div>
         </div>
-    );
+    )
 }
 
-export default AdminLogin;
+export default AdminLogin

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import Sidebar from "../commonComponent/sideBar";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react"
+import Sidebar from "../commonComponent/sideBar"
+import { ProductContext } from "./productContext"
+import { useNavigate } from "react-router-dom"
 
 function AddProduct() {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
+  const { addProduct } = useContext(ProductContext)
   const [product, setProduct] = useState({
     name: "",
     price: "",
@@ -12,19 +13,18 @@ function AddProduct() {
     category: "",
     quantity: "",
     description: ""
-  });
+  })
 
   const handleChange = (e) => {
-    setProduct({ ...product, [e.target.name]: e.target.value });
-  };
+    setProduct({ ...product, [e.target.name]: e.target.value })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    await axios.post("http://localhost:3000/products",product)
+    e.preventDefault()
+    await addProduct(product)
     alert("Product added successfully")
     navigate("/admin/product")
-  };
-
+  }
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
@@ -130,7 +130,7 @@ function AddProduct() {
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-export default AddProduct;
+export default AddProduct
