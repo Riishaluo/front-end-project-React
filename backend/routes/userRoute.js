@@ -4,17 +4,16 @@ const userController = require('../controller/userController')
 const userAuth = require('../middleware/userAuth')
 const cartController = require('../controller/cartController')
 const paymentController = require('../controller/paymentController')
+const accountController = require('../controller/userAccountController')
 
 //home
 router.get('/',userAuth.verifyToken,userController.renderHome)
 
 //register
-router.get('/register',userController.renderRegister)
 router.post('/Addregister',userController.userRegister)
 
 
 //login
-router.get('/login',userController.renderLogin)
 router.post('/Checklogin',userController.userLogin)
 
 
@@ -26,5 +25,8 @@ router.post('/delete-cart',userAuth.verifyToken,cartController.deleteCart)
 //payment
 router.get('/checkout',userAuth.verifyToken,paymentController.renderPayment)
 router.post('/orderPlaced',userAuth.verifyToken,paymentController.createOrder)
+
+//accountControllerx
+router.get('/orders',userAuth.verifyToken,accountController.listOrders)
 
 module.exports = router;

@@ -28,12 +28,13 @@ exports.userRegister = async (req, res) => {
         console.log(`req.body from register${req.body}`)
         const existingUserName = await User.findOne({ username })
         if (existingUserName) {
-            return res.status(400).json({ error: 'Email Already Existed' })
-        }
-        const existingEmail = await User.findOne({ email })
+        return res.status(400).json({ error: 'Username is already taken' });
+    }
+
+        const existingEmail = await User.findOne({ email });
         if (existingEmail) {
-            return res.status(400).json({ error: 'Username Is Already Taken' })
-        }
+        return res.status(400).json({ error: 'Email is already in use' });
+    }
 
         const salt = await bcrypt.genSalt(10);
         const hashedpass = await bcrypt.hash(password, salt);
@@ -58,7 +59,7 @@ exports.userLogin = async (req, res) => {
         const { username, email, password } = req.body
         console.log(`req.body from login${req.body}`)
 
-        const user = await User.findOne({ username, email })
+        const user = await User.findOne({ email })
 
         if (!user) {
             return res.status(404).json({ message: 'Invalid Username or Password' })
@@ -72,10 +73,22 @@ exports.userLogin = async (req, res) => {
 
         const token = jwt.sign({userId:user._id},'the_secret_key')
 
-        res.status(200).json({ message: "Login successful",token})
+        res.status(200).json({
+        message: "Login successful",
+        token,
+        user: {
+        id: user._id,
+        username: user.username,
+        email: user.email
+        }
+})
 
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
 }
 
+//logout
+// exports.logout = (req,res)=>{
+    
+// }
