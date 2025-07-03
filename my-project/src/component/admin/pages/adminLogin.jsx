@@ -2,6 +2,8 @@ import React, { useState,useEffect } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { useNavigate } from "react-router-dom"
+import axios from "axios"
+
 
 function AdminLogin() {
     const [loginError, setLoginError] = useState("")
@@ -15,9 +17,6 @@ function AdminLogin() {
         }
     }, [isLoggedIn, navigate])
 
-
-    const predefinedEmail = "admin@gmail.com"
-    const predefinedPassword = "admin123"
 
     const validationSchema = Yup.object({
         email: Yup.string()
@@ -33,18 +32,21 @@ function AdminLogin() {
         password: "",
     }
 
-    const handleSubmit = (values) => {
-        if (
-            values.email === predefinedEmail &&
-            values.password === predefinedPassword
-        ) {
+    const handleSubmit = async (values) => {
+    try {
+        const response = await axios.post("http://localhost:9999/admin/checkAdminLogin", values)
+
+        if (response.status === 200) {
             localStorage.setItem("isAdminLoggedIn", "true")
             navigate("/admin/dashboard")
             setLoginError("")
-        } else {
-            setLoginError("Invalid email or password")
         }
+    } catch (error) {
+        setLoginError("Invalid email or password")
+        console.error("Admin login failed:", error)
     }
+}
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">

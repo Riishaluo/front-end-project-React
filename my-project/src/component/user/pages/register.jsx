@@ -19,25 +19,20 @@ export default function Register() {
         validationSchema,
         onSubmit: async (values) => {
             try {
-                const response = await axios.get("http://localhost:3000/users");
-                const users = response.data;
-                const emailIsTaken = users.some((user) => user.email === values.email);
-                const userNameIsTaken = users.some((user) => user.username === values.username);
-
-                if (emailIsTaken || userNameIsTaken) {
-                    setErrorMessage(emailIsTaken ? "⚠ Email is already in use." : "⚠ Username is already taken.");
-                    return;
-                }
-
-                await axios.post("http://localhost:3000/users", values);
-                console.log(values);
+                const response = await axios.post("http://localhost:9999/Addregister", values);
                 setErrorMessage("");
+                console.log("Registered user:", response.data);
                 navigate("/login");
             } catch (error) {
-                setErrorMessage("Something went wrong. Please try again!");
+                if (error.response && error.response.data && error.response.data.error) {
+                    setErrorMessage(`⚠ ${error.response.data.error}`);
+                } else {
+                    setErrorMessage("⚠ Something went wrong. Please try again!");
+                }
                 console.log(error);
             }
         },
+
     });
 
     return (

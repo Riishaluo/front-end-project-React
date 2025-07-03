@@ -1,46 +1,51 @@
-import { createContext, useState, useEffect } from "react"
-import axios from "axios"
+import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
-export const ProductContext = createContext()
+export const ProductContext = createContext();
 
 export const ProductProvider = ({ children }) => {
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/products")
-      setProducts(res.data)
+      const res = await axios.get("http://localhost:9999/admin/admin-products");
+      setProducts(res.data);
     } catch (error) {
-      console.error("Error fetching products:", error)
+      console.error("Error fetching products:", error);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchProducts()
-  }, [])
+    fetchProducts();
+  }, []);
 
   const deleteProduct = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/products/${id}`)
-      setProducts((prev) => prev.filter((product) => product.id !== id))
-      alert("Item deleted")
+      await axios.post(`http://localhost:9999/admin/deleteProduct/${id}`);
+      setProducts((prev) => prev.filter((p) => p._id !== id));
+      alert("Item deleted");
     } catch (err) {
-      alert(err)
+      alert("Failed to delete");
     }
-  }
+  };
 
-  const addProduct = async (newProduct) => {
+  const addProduct = async (formData) => {
     try {
-      await axios.post("http://localhost:3000/products", newProduct)
-      fetchProducts()
+      await axios.post("http://localhost:9999/admin/addProduct", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      fetchProducts();
     } catch (err) {
-      alert(err)
+      console.error("Add product error:", err);
+      alert("Failed to add product");
     }
-  }
+  };
 
   return (
     <ProductContext.Provider value={{ products, deleteProduct, addProduct }}>
       {children}
     </ProductContext.Provider>
-  )
-}
+  );
+};

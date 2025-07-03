@@ -9,9 +9,6 @@ import Swal from "sweetalert2"
 export default function Payment() {
 
     const navigate = useNavigate()
-
-    const userId = localStorage.getItem("userId")
-
     const formik = useFormik({
         initialValues: {
             fullName: "",
@@ -35,36 +32,40 @@ export default function Payment() {
         }),
         onSubmit: async (values) => {
             try {
-                const userId = localStorage.getItem("userId");
-                const response = await axios.get(`http://localhost:3000/users/${userId}`);
+                const response = await axios.get("http://localhost:9999/checkout", { withCredentials: true });
                 const cart = response.data.cart;
-        
-                const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-        
-                await axios.post("http://localhost:3000/orderList", {
-                    ...values,
-                    userId,
-                    totalAmount: totalPrice,
-                    cart: cart,
-                    createdAt: new Date().toISOString()
-                });
-        
-                await axios.patch(`http://localhost:3000/users/${userId}`, {
-                    cart: []
-                });
-        
+
+                const items = cart.products.map(item => ({
+                    productId: item.product._id,
+                    quantity: item.quantity,
+                    price: item.product.price
+                }))
+
+                const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                await axios.post("http://localhost:9999/orderPlaced", {
+                    fullName: values.fullName,
+                    email: localStorage.getItem("email"),
+                    address: values.address,
+                    pincode: values.pincode,
+                    items,
+                    total,
+                    paymentMethod:"COD"
+                }, { withCredentials: true });
+
+
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Order Placed!',
                     text: 'Your order has been successfully placed.',
                     confirmButtonColor: '#d33'
                 }).then(() => {
-                    navigate("/"); 
+                    navigate("/");
                 });
-        
+
             } catch (error) {
                 console.error("Error placing order:", error);
-        
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Failed!',
@@ -73,7 +74,7 @@ export default function Payment() {
                 });
             }
         }
-        
+
     });
 
     return (

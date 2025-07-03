@@ -8,62 +8,55 @@ import Footer from "../HomeComponent/footer";
 export default function ProductDetails() {
     const { productId } = useParams();
     const navigate = useNavigate();
-    const [userCart, setUserCart] = useState([]);
+    const [cartProducts, setCartProducts] = useState([]);
     const [product, setProduct] = useState(null);
-    const userId = localStorage.getItem("userId");
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/products/${productId}`);
+                const response = await axios.get(`http://localhost:9999/products/${productId}`);
                 setProduct(response.data);
             } catch (error) {
                 console.error("Error fetching product:", error);
             }
         };
 
-        const fetchUserCart = async () => {
-            if (userId) {
-                try {
-                    const res = await axios.get(`http://localhost:3000/users/${userId}`);
-                    setUserCart(res.data.cart || []);
-                } catch (err) {
-                    console.error("Error fetching user cart:", err);
-                }
+        const fetchCart = async () => {
+            try {
+                const res = await axios.get("http://localhost:9999/cart", {
+                    withCredentials: true
+                });
+                setCartProducts(res.data.products || []);
+            } catch (err) {
+                console.error("Error fetching cart:", err);
             }
         };
 
         fetchProduct();
-        fetchUserCart();
-    }, [productId, userId]);
+        fetchCart();
+    }, [productId]);
+
+    const isAlreadyInCart = cartProducts.some(item => item.product?._id === productId);
 
     const handleAddToCart = async () => {
         try {
-            const userResponse = await axios.get(`http://localhost:3000/users/${userId}`);
-            const user = userResponse.data;
+            const cartItem = {
+                productId: product._id,
+                quantity: 1,
+                price: product.price
+            };
 
-            const isAlreadyInCart = user.cart.find((item) => item.id === product.id);
-            if (isAlreadyInCart) {
-                await Swal.fire({
-                    icon: "info",
-                    title: "Already in Cart",
-                    text: "This product is already in your cart!",
-                    confirmButtonText: "OK"
-                });
-                return;
-            }
+            await axios.post("http://localhost:9999/add-to-cart", cartItem, {
+                withCredentials: true
+            });
 
-            const updatedCart = [...user.cart, product];
-            await axios.patch(`http://localhost:3000/users/${userId}`, { cart: updatedCart });
-
-            setUserCart(updatedCart);
-
-            await Swal.fire({
+            Swal.fire({
                 icon: "success",
                 title: "Added to Cart",
                 text: "Product successfully added to your cart!",
                 confirmButtonText: "OK"
             });
+
         } catch (error) {
             Swal.fire({
                 icon: "error",
@@ -76,8 +69,6 @@ export default function ProductDetails() {
     };
 
     if (!product) return <div className="p-6 text-center">Loading...</div>;
-
-    const isAlreadyInCart = userCart.find((item) => item.id === product.id);
 
     return (
         <div className="flex flex-col min-h-screen">

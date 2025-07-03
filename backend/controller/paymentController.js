@@ -24,29 +24,38 @@ exports.renderPayment = async (req, res) => {
 
 exports.createOrder = async (req, res) => {
   try {
-    const userId = req.user.userId
-    const { items, total } = req.body
-    console.log(total)
+    const userId = req.user.userId;
+    console.log("createOrder"+userId)
+    const { fullName, email, address, pincode, items, total,paymentMethod } = req.body
+    console.log(email)
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "Order must include at least one item." });
     }
 
-    if (!total || total <= 0) {
-      return res.status(400).json({ message: "Invalid total amount." });
-    }
+    const cart = items.map(item => ({
+      productId: item.productId,
+      quantity: item.quantity
+    }))
 
     const newOrder = await Order.create({
       orderBy: userId,
-      items,
-      total
-    })
+      fullName,
+      email,
+      address,
+      pincode,
+      cart,
+      totalAmount: total,
+      paymentMethod:paymentMethod||"COD"
+    });
 
-    await Cart.deleteOne({user:userId})
+    await Cart.deleteOne({ user: userId });
 
     res.status(201).json({ message: "Order placed successfully", order: newOrder });
 
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("🔥 Order creation failed:", err)
+    res.status(500).json({ message: err.message })
   }
 }
+
   

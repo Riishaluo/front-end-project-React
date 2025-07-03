@@ -1,32 +1,43 @@
-const express = require('express')
-const router = express.Router()
-const userController = require('../controller/userController')
-const userAuth = require('../middleware/userAuth')
-const cartController = require('../controller/cartController')
-const paymentController = require('../controller/paymentController')
+const express = require('express');
+const router = express.Router();
+const userController = require('../controller/userController');
+const userAuth = require('../middleware/userAuth');
+const cartController = require('../controller/cartController');
+const paymentController = require('../controller/paymentController');
 const accountController = require('../controller/userAccountController')
-
-//home
-router.get('/',userAuth.verifyToken,userController.renderHome)
-
-//register
-router.post('/Addregister',userController.userRegister)
+const productController = require('../controller/productDetailedController')
 
 
-//login
-router.post('/Checklogin',userController.userLogin)
+router.get('/', userController.renderHome)
+
+router.post('/Addregister', userController.userRegister)
+
+router.post('/Checklogin', userController.userLogin)
 
 
-//addToCart
-router.get('/cart',userAuth.verifyToken,cartController.renderCart)
-router.post('/add-to-cart',userAuth.verifyToken,cartController.addToCart)
-router.post('/delete-cart',userAuth.verifyToken,cartController.deleteCart)
+router.get('/check-auth', userAuth.verifyToken, (req, res) => {
+    res.status(200).json({ username: req.user.username, message: "Authenticated" })
+});
 
-//payment
-router.get('/checkout',userAuth.verifyToken,paymentController.renderPayment)
-router.post('/orderPlaced',userAuth.verifyToken,paymentController.createOrder)
 
-//accountControllerx
-router.get('/orders',userAuth.verifyToken,accountController.listOrders)
+// Cart
+router.get('/cart', userAuth.verifyToken, cartController.renderCart)
+router.post('/add-to-cart', userAuth.verifyToken, cartController.addToCart)
+router.post('/delete-cart', userAuth.verifyToken, cartController.deleteCart)
+
+// Payment
+router.get('/checkout', userAuth.verifyToken, paymentController.renderPayment)
+router.post('/orderPlaced', userAuth.verifyToken, paymentController.createOrder)
+
+// Account
+router.get("/my-orders", userAuth.verifyToken,accountController.getMyOrders);
+
+//detiled route
+router.get('/products/:id', productController.getProductById)
+router.get('/products/category/:category', productController.getProductsByCategory)
+
+router.post("/logout", userController.logout);
+
+
 
 module.exports = router;

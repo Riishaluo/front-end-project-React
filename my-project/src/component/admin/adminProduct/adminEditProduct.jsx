@@ -4,7 +4,7 @@ import Sidebar from "../commonComponent/sideBar"
 import axios from "axios"
 
 function EditProduct() {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
   const { id } = useParams()
   const [product, setProduct] = useState({
     name: "",
@@ -17,9 +17,17 @@ function EditProduct() {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      try { 
-        const res = await axios.get(`http://localhost:3000/products/${id}`)
-        setProduct(res.data)
+      try {
+        const res = await axios.get(`http://localhost:9999/admin/editProducts/${id}`)
+        console.log(res)
+        setProduct({
+          name: res.data.name || "",
+          price: res.data.price || "",
+          image: res.data.image || "",
+          category: res.data.category || "",
+          quantity: res.data.stock || "",
+          description: res.data.description || ""
+        })
       } catch (error) {
         console.error("Error fetching product:", error)
       }
@@ -28,27 +36,27 @@ function EditProduct() {
   }, [id])
 
   const handleChange = (e) => {
-    const {name,value} = e.target
-    const newValue =
-    name === "price" || name === "quantity"
-      ? parseFloat(value)
-      : value
-
-  setProduct({ ...product, [name]: newValue })
-}
+    const { name, value } = e.target
+    const newValue = name === "price" || name === "quantity" ? parseFloat(value) : value
+    setProduct({ ...product, [name]: newValue })
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axios.put(`http://localhost:3000/products/${id}`, product)
+      const updatedData = {
+        ...product,
+        stock: product.quantity 
+      }
+      delete updatedData.quantity 
+      await axios.put(`http://localhost:9999/admin/edit-product/${id}`, updatedData)
       alert("Product updated successfully!")
-      navigate("/admin/product")
+      navigate("/admin/admin-products")
     } catch (error) {
       console.error("Error updating product:", error)
       alert("Failed to update product")
     }
   }
-
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-start p-6">
@@ -67,8 +75,8 @@ function EditProduct() {
               name="name"
               value={product.name}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
               required
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
             />
           </div>
 
@@ -79,8 +87,8 @@ function EditProduct() {
               name="price"
               value={product.price}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
               required
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
             />
           </div>
 
@@ -102,8 +110,8 @@ function EditProduct() {
               name="category"
               value={product.category}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
               required
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
             />
           </div>
 
@@ -114,8 +122,8 @@ function EditProduct() {
               name="quantity"
               value={product.quantity}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
               required
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
             />
           </div>
         </div>
@@ -126,9 +134,9 @@ function EditProduct() {
             name="description"
             value={product.description}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
             rows="4"
             required
+            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
           ></textarea>
         </div>
 

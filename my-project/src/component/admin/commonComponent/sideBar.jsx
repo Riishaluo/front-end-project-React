@@ -18,7 +18,7 @@ function Sidebar() {
         </li>
         <li
           onClick={() => {
-            navigate("/admin/product");
+            navigate("/admin/admin-products")
           }}
           className="hover:bg-gray-700 p-3 rounded cursor-pointer transition"
         >

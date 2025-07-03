@@ -2,6 +2,17 @@ const Product = require('../model/productSchema')
 const { cloudinary } = require('../utils/cloudinary')
 
 
+
+exports.getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find()
+    console.log("products" + products)
+    res.status(200).json(products)
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch products", error: err.message })
+  }
+}
+
 exports.AddProduct = (async (req, res) => {
     try {
         const { name, price, category, stock, description } = req.body
@@ -13,10 +24,10 @@ exports.AddProduct = (async (req, res) => {
         }
         const newProduct = new Product({
             name,
-            price,
+            price:Number(price),
             image,
             category,
-            stock,
+            stock:Number(stock),
             description,
         })
 
@@ -52,6 +63,22 @@ exports.DeleteProduct = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 }
+
+exports.renderEditProduct = async (req, res) => {
+  try {
+    const productId = req.params.id
+    const product = await Product.findById(productId)
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.error("Error in renderEditProduct:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 
 
 exports.EditProduct = async (req, res) => {

@@ -2,26 +2,28 @@ const Cart = require('../model/cartSchema')
 const Product = require('../model/productSchema')
 
 
-exports.renderCart = (async (req, res) => {
+exports.renderCart = async (req, res) => {
     try {
-        const userId = req.user.userId
+        const userId = req.user?.userId;
+        console.log("RENDERING CART for", req.user);
 
         if (!userId) {
-            return res.status(404).json({ message: "Please login" })
-        }
-        const cart = await Cart.findOne({ user: userId })
-        const product = cart.products
-
-        if (product.length === 0) {
-            return res.status(404).json({ message: "Cart is empty" });
+            return res.status(401).json({ message: "Please login" });
         }
 
-        res.status(200).json({ message: "Cart is fetched", product })
+        const cart = await Cart.findOne({ user: userId }).populate("products.product")
 
+        if (!cart || !cart.products || cart.products.length === 0) {
+            return res.status(200).json({ message: "Cart is empty", product: [] });
+        }
+
+        res.status(200).json({ message: "Cart is fetched", product: cart.products });
     } catch (err) {
-        return res.status(500).json({ message: err.message })
+        console.error("renderCart error:", err);
+        return res.status(500).json({ message: err.message });
     }
-})
+};
+
 
 exports.addToCart = (async (req, res) => {
     try {
@@ -43,7 +45,6 @@ exports.addToCart = (async (req, res) => {
         }
 
         const price = product.price
-
         let cart = await Cart.findOne({ user: userId })
 
         if (cart) {
@@ -56,7 +57,6 @@ exports.addToCart = (async (req, res) => {
             } else {
                 cart.products.push({ product: productId, quantity, price })
             }
-
 
             cart.totalPrice = cart.products.reduce((total, item) => {
                 return total + item.price * item.quantity;

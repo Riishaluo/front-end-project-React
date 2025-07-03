@@ -9,11 +9,8 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("userId");
-    if (isLoggedIn) {
-      navigate("/");
-    }
-  }, [navigate]);
+    console.log("Login loaded");
+  }, []);
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -29,34 +26,26 @@ export default function Login() {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await axios.get("http://localhost:3000/users");
-        const users = response.data;
+        const response = await axios.post("http://localhost:9999/Checklogin", values, {
+          withCredentials: true,
+        });
 
-        const matchedUser = users.find(
-          (user) =>
-            user.email === values.email && user.password === values.password
-        );
+        const user = response.data?.user;
+        if (!user) throw new Error("No user data received");
 
-        if (matchedUser) {
-          if (matchedUser.isBlocked) {
-            setErrorMessage("⚠ Your account has been blocked. Please contact support.");
-            return;
-          }
-
-          await axios.patch(`http://localhost:3000/users/${matchedUser.id}`, {
-            isLogged: true,
-            cart: [],
-          });
-
-          localStorage.setItem("userId", matchedUser.id);
-          setErrorMessage("");
-          navigate("/");
-        } else {
-          setErrorMessage("Invalid email or password!");
-        }
+        setErrorMessage("");
+        navigate("/");
       } catch (err) {
-        setErrorMessage("Please try again!");
-        console.error(err);
+        const status = err.response?.status;
+        const message = err.response?.data?.message;
+
+        if (status === 403) {
+          navigate("/blocked");
+        } else if (message) {
+          setErrorMessage(`⚠ ${message}`);
+        } else {
+          setErrorMessage("⚠ Please try again!");
+        }
       }
     },
   });
@@ -79,10 +68,11 @@ export default function Login() {
             <input
               type="email"
               name="email"
-              className={`w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 ${formik.touched.email && formik.errors.email
+              className={`w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 ${
+                formik.touched.email && formik.errors.email
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-300 focus:ring-blue-500"
-                }`}
+              }`}
               placeholder="Enter your email"
               {...formik.getFieldProps("email")}
             />
@@ -96,10 +86,11 @@ export default function Login() {
             <input
               type="password"
               name="password"
-              className={`w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 ${formik.touched.password && formik.errors.password
+              className={`w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 ${
+                formik.touched.password && formik.errors.password
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-300 focus:ring-blue-500"
-                }`}
+              }`}
               placeholder="Enter your password"
               {...formik.getFieldProps("password")}
             />

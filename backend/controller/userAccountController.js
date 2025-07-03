@@ -1,17 +1,17 @@
 const Order = require('../model/orderSchema')
 
 
-exports.listOrders = async (req, res) => {
+exports.getMyOrders = async (req, res) => {
   try {
-    const userId = req.user.userId
-    if (!userId) {
-      return res.status(401).json({ message: "Please login" });
-    }
-    const orders = await Order.find({ orderBy: userId }).sort({ createdAt: -1 });
-    console.log(orders)
-    res.status(200).json({ orders }); 
+    const userId = req.user.userId;
+    const orders = await Order.find({ orderBy: userId })
+      .populate("cart.productId")
+      .exec();
+
+    res.json(orders);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Error fetching user orders:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 

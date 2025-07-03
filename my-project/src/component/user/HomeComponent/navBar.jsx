@@ -1,47 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import axios from "axios";
-import Swal from "sweetalert2"
-
 
 export default function Navbar() {
-    const [loggedIn, setLoggedIn] = useState(null)
-    const [dropdownOpen, setDropdownOpen] = useState(false)
-    const navigate = useNavigate()
-    const loggedUserId = localStorage.getItem("userId")
+    const [loggedIn, setLoggedIn] = useState(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [loading, setLoading] = useState(true); 
+    const navigate = useNavigate();
+
+    console.log(loggedIn)
 
     useEffect(() => {
-        const fetchLoggedInUser = async () => {
+        const checkLoginStatus = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/users")
-                const users = response.data;
-                const user = users.find((user) => String(user.id) === loggedUserId)
-
-                if (user) {
-                    setLoggedIn(user)
-                }
-            } catch (error) {
-                console.error("Error fetching users:", error)
+                const res = await axios.get("http://localhost:9999/check-auth", {
+                    withCredentials: true,
+                });
+                setLoggedIn({
+                    username: res.data.username,
+                    isLogged: true,
+                });
+            } catch (err) {
+                setLoggedIn(null);
+            } finally {
+                setLoading(false); 
             }
         };
+        checkLoginStatus();
+    }, []);
 
-        fetchLoggedInUser()
-    }, [loggedUserId])
+    if (loading) return null;
 
     const handleLogout = async () => {
         try {
-            await axios.patch(`http://localhost:3000/users/${loggedUserId}`, {
-                isLogged: false
-            });
-
-            localStorage.removeItem("userId")
-            setLoggedIn(null)
-            navigate("/")
-        } catch (error) {
-            console.error("Error during logout:", error)
+            await axios.post("http://localhost:9999/logout", {}, { withCredentials: true });
+            setLoggedIn(null);
+            navigate("/login");
+        } catch (err) {
+            Swal.fire("Error", "Failed to logout", "error");
         }
     };
-
 
     return (
         <div>
@@ -54,14 +53,14 @@ export default function Navbar() {
                     <li
                         onClick={() => {
                             if (loggedIn?.isLogged) {
-                                navigate("/cart")
+                                navigate("/cart");
                             } else {
                                 Swal.fire({
                                     icon: "warning",
                                     title: "Please Login",
                                     text: "You must be logged in to access your cart.",
                                     confirmButtonColor: "#d33",
-                                })
+                                });
                             }
                         }}
                         className="list-none cursor-pointer"
@@ -73,10 +72,10 @@ export default function Navbar() {
                         />
                     </li>
 
-                    {loggedIn ? (
+                    {loggedIn?.isLogged ? (
                         <li className="relative list-none px-2 sm:px-4 cursor-pointer font-semibold">
                             <div onClick={() => setDropdownOpen(!dropdownOpen)}>
-                                {loggedIn.username}
+                                {loggedIn.username || "User"}
                             </div>
                             {dropdownOpen && (
                                 <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg border z-20">
@@ -135,5 +134,4 @@ export default function Navbar() {
             </nav>
         </div>
     );
-
 }
