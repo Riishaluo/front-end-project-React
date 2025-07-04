@@ -8,7 +8,6 @@ const products = require('../model/productSchema')
 exports.renderHome = (async (req, res) => {
     try {
         const showProducts = await products.find()
-        console.log(showProducts)
         res.status(200).json({ message: 'Home page Rendered', products: showProducts })
     } catch (err) {
         res.status(500).json({ message: 'Error rendering in The home Page' })

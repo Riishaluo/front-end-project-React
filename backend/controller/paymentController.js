@@ -1,6 +1,6 @@
 const Order = require('../model/orderSchema');
 const Cart = require('../model/cartSchema')
-
+const Product = require('../model/productSchema')
 
 
 exports.renderPayment = async (req, res) => {
@@ -17,21 +17,17 @@ exports.renderPayment = async (req, res) => {
   } catch (err) {
     return res.status(500).json({ message: err.message })
   }
-
-
 }
 
 
 exports.createOrder = async (req, res) => {
   try {
     const userId = req.user.userId;
-    console.log("createOrder"+userId)
-    const { fullName, email, address, pincode, items, total,paymentMethod } = req.body
-    console.log(email)
+    const { fullName, email, address, pincode, items, total, paymentMethod } = req.body
     if (!items || items.length === 0) {
-      return res.status(400).json({ message: "Order must include at least one item." });
+      return res.status(400).json({ message: "Order must include at least one item." })
     }
-
+    console.log(items)
     const cart = items.map(item => ({
       productId: item.productId,
       quantity: item.quantity
@@ -45,10 +41,25 @@ exports.createOrder = async (req, res) => {
       pincode,
       cart,
       totalAmount: total,
-      paymentMethod:paymentMethod||"COD"
-    });
+      paymentMethod: paymentMethod || "COD"
+    })
 
-    await Cart.deleteOne({ user: userId });
+    for (const item of items) {
+      const product = await Product.findById(item.productId);
+      console.log(product.stock)
+      if (product) {
+        if (product.stock >= item.quantity){
+          product.stock -= item.quantity
+          await product.save()
+        } else {
+          console.warn(`Product ${product.name} has insufficient stock`);
+        }
+      }
+    }
+
+
+
+    await Cart.deleteOne({ user: userId })
 
     res.status(201).json({ message: "Order placed successfully", order: newOrder });
 
@@ -58,4 +69,3 @@ exports.createOrder = async (req, res) => {
   }
 }
 
-  

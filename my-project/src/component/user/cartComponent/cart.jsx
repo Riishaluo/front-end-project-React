@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import Swal from "sweetalert2";
+import React, { useState, useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import axios from "axios"
+import Swal from "sweetalert2"
 
 export default function CartSection() {
-    const [cart, setCartItem] = useState([]);
-    const navigate = useNavigate();
+    const [cart, setCartItem] = useState([])
+    const navigate = useNavigate()
 
     console.log(cart)
 
@@ -14,50 +14,60 @@ export default function CartSection() {
             try {
                 const response = await axios.get("http://localhost:9999/cart", {
                     withCredentials: true,
-                });
-                setCartItem(response.data.product || []);
+                })
+                setCartItem(response.data.product || [])
             } catch (err) {
                 if (err.response?.status === 403) {
                     Swal.fire("Access Denied", "Your account has been blocked.", "error").then(() => {
-                        navigate("/login");
-                    });
+                        navigate("/login")
+                    })
                 } else if (err.response?.status === 401) {
                     Swal.fire("Session Expired", "Please login again.", "warning").then(() => {
-                        navigate("/login");
-                    });
+                        navigate("/login")
+                    })
                 } else {
-                    Swal.fire("Error", err.response?.data?.message || "Failed to fetch cart", "error");
+                    Swal.fire("Error", err.response?.data?.message || "Failed to fetch cart", "error")
                 }
             }
-        };
+        }
 
-        fetchCartItem();
-    }, [navigate]);
+        fetchCartItem()
+    }, [navigate])
 
 
     const totalPrice = cart.reduce(
         (acc, item) => acc + item.price * item.quantity,
         0
-    );
+    ) 
 
-    const updateCartCount = async (productId, updatedQuantity) => {
-        try {
-            await axios.post(
-                "http://localhost:9999/add-to-cart",
-                { productId, quantity: updatedQuantity },
-                { withCredentials: true }
-            );
+    const updateCartCount = async (productId, newQuantity) => {
+    try {
+    await axios.post(
+      "http://localhost:9999/update-cart-quantity",
+      { productId, quantity: newQuantity },
+      { withCredentials: true }
+    )
 
-            const updatedCart = cart.map((item) =>
-                item.product._id === productId
-                    ? { ...item, quantity: updatedQuantity }
-                    : item
-            );
-            setCartItem(updatedCart);
-        } catch (err) {
-            Swal.fire("Error", "Failed to update quantity", "error");
-        }
-    };
+    const res = await axios.get("http://localhost:9999/cart", {
+      withCredentials: true,
+    })
+    console.log(res.data.product)     
+    setCartItem(res.data.product || []) 
+  } catch (err) {
+    if (err.response?.status === 409) {
+      Swal.fire({
+        icon: "warning",
+        title: "Stock Limit Reached",
+        text: "You cannot add more of this product than available in stock.",
+        confirmButtonText: "OK",
+      })
+    } else {
+      console.error("Error updating cart quantity:", err)
+    }
+  }
+}
+
+
 
     const handleRemoveItem = async (productId) => {
         try {
@@ -65,16 +75,16 @@ export default function CartSection() {
                 "http://localhost:9999/delete-cart",
                 { productId },
                 { withCredentials: true }
-            );
+            )
 
             const updatedCart = cart.filter(
                 (item) => item.product._id !== productId
-            );
-            setCartItem(updatedCart);
+            )
+            setCartItem(updatedCart)
         } catch (err) {
-            Swal.fire("Error", "Failed to remove item", "error");
+            Swal.fire("Error", "Failed to remove item", "error")
         }
-    };
+    }
 
     return (
         <div className="flex flex-col lg:flex-row max-w-7xl mx-auto p-4 sm:p-6 gap-6 sm:gap-8">
@@ -183,5 +193,5 @@ export default function CartSection() {
                 )}
             </div>
         </div>
-    );
+    )
 }

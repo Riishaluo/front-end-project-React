@@ -65,12 +65,19 @@ function DisplayProducts() {
           text: "Please login to add items to your cart!",
           confirmButtonText: "OK",
         }).then(() => navigate("/login"));
+      } else if (err.response?.status === 409) {
+        Swal.fire({
+          icon: "warning",
+          title: "Out of Stock",
+          text: "This product is currently out of stock.",
+          confirmButtonText: "OK",
+        });
       } else {
         console.error("Error adding to cart:", err);
         alert("An error occurred while adding to cart.");
       }
     }
-  };
+  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-6">

@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../HomeComponent/navBar";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function ViewOrders() {
   const [userOrders, setUserOrders] = useState([]);
+  const navigate = useNavigate()
 
  useEffect(() => {
   async function fetchOrders() {
     try {
       const response = await axios.get("http://localhost:9999/my-orders", {
         withCredentials: true,
-      });
-      setUserOrders(response.data);
+      })
+      setUserOrders(response.data)
     } catch (err) {
       if (err.response?.status === 403) {
         alert("Your account has been blocked. Please contact support.");
@@ -20,14 +22,13 @@ export default function ViewOrders() {
       } else if (err.response?.status === 401) {
         navigate("/login");
       } else {
-        console.error("Error fetching orders:", err);
+        console.error("Error fetching orders:", err)
       }
     }
   }
 
-  fetchOrders();
-}, [navigate]);
-
+  fetchOrders()
+}, [navigate])
 
   return (
     <>

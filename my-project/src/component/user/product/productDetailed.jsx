@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import Swal from "sweetalert2";
-import Navbar from "../HomeComponent/navBar";
+import React, { useEffect, useState } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import axios from "axios"
+import Swal from "sweetalert2"
+import Navbar from "../HomeComponent/navBar"
 import Footer from "../HomeComponent/footer";
 
 export default function ProductDetails() {
@@ -36,7 +36,7 @@ export default function ProductDetails() {
         fetchCart();
     }, [productId]);
 
-    const isAlreadyInCart = cartProducts.some(item => item.product?._id === productId);
+    const isAlreadyInCart = cartProducts.some(item => item.product?._id === productId)  
 
     const handleAddToCart = async () => {
         try {
@@ -44,31 +44,48 @@ export default function ProductDetails() {
                 productId: product._id,
                 quantity: 1,
                 price: product.price
-            };
+            }
 
             await axios.post("http://localhost:9999/add-to-cart", cartItem, {
                 withCredentials: true
-            });
+            })
 
             Swal.fire({
                 icon: "success",
                 title: "Added to Cart",
                 text: "Product successfully added to your cart!",
                 confirmButtonText: "OK"
-            });
+            })
 
         } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "Something went wrong while adding to cart.",
-                confirmButtonText: "OK"
-            });
-            console.error("Error adding to cart:", error);
+            if (error.response?.status === 401) {
+                Swal.fire({
+                    icon: "info",
+                    title: "Login Required",
+                    text: "Please login to add items to your cart!",
+                    confirmButtonText: "Login"
+                }).then(() => navigate("/login"))
+            } else if (error.response?.status === 409) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Out of Stock",
+                    text: "This product is currently out of stock.",
+                    confirmButtonText: "OK"
+                })
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Something went wrong while adding to cart.",
+                    confirmButtonText: "OK"
+                })
+                console.error("Error adding to cart:", error)
+            }
         }
-    };
+    }
 
-    if (!product) return <div className="p-6 text-center">Loading...</div>;
+
+    if (!product) return <div className="p-6 text-center">Loading...</div>
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -103,5 +120,5 @@ export default function ProductDetails() {
 
             <Footer />
         </div>
-    );
+    )
 }

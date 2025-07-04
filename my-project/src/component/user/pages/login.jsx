@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from "react"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import { useNavigate, Link } from "react-router-dom"
+import axios from "axios"
 
 export default function Login() {
-  const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate()
+  const [errorMessage, setErrorMessage] = useState("")
 
   useEffect(() => {
-    console.log("Login loaded");
-  }, []);
+    console.log("Login loaded")
+  }, [])
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -19,7 +19,7 @@ export default function Login() {
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
       .required("⚠ Password is required"),
-  });
+  })
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
@@ -28,27 +28,27 @@ export default function Login() {
       try {
         const response = await axios.post("http://localhost:9999/Checklogin", values, {
           withCredentials: true,
-        });
+        })
 
-        const user = response.data?.user;
-        if (!user) throw new Error("No user data received");
+        const user = response.data?.user
+        if (!user) throw new Error("No user data received")
 
-        setErrorMessage("");
-        navigate("/");
+        setErrorMessage("")
+        navigate("/")
       } catch (err) {
-        const status = err.response?.status;
-        const message = err.response?.data?.message;
+        const status = err.response?.status
+        const message = err.response?.data?.message
 
         if (status === 403) {
-          navigate("/blocked");
+          navigate("/blocked")
         } else if (message) {
-          setErrorMessage(`⚠ ${message}`);
+          setErrorMessage(`⚠ ${message}`)
         } else {
-          setErrorMessage("⚠ Please try again!");
+          setErrorMessage("⚠ Please try again!")
         }
       }
     },
-  });
+  })
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300">
@@ -115,5 +115,5 @@ export default function Login() {
         </p>
       </div>
     </div>
-  );
+  )
 }

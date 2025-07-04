@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useFormik } from "formik"
+import * as Yup from "yup"
 import axios from "axios";
 
 export default function Register() {
-    const navigate = useNavigate();
-    const [errorMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate()
+    const [errorMessage, setErrorMessage] = useState("")
 
     const validationSchema = Yup.object({
         username: Yup.string().min(3, "Must be at least 3 characters").required("⚠ Username is required"),
@@ -27,13 +27,13 @@ export default function Register() {
                 if (error.response && error.response.data && error.response.data.error) {
                     setErrorMessage(`⚠ ${error.response.data.error}`);
                 } else {
-                    setErrorMessage("⚠ Something went wrong. Please try again!");
+                    setErrorMessage("⚠ Something went wrong. Please try again!")
                 }
-                console.log(error);
+                console.log(error)
             }
         },
 
-    });
+    })
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300">
@@ -113,5 +113,5 @@ export default function Register() {
                 </p>
             </div>
         </div>
-    );
+    )
 }

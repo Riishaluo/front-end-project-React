@@ -2,7 +2,7 @@ const Product = require("../model/productSchema");
 
 exports.getProductById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
     const product = await Product.findById(id);
     if (!product) {
@@ -11,7 +11,7 @@ exports.getProductById = async (req, res) => {
 
     res.status(200).json(product);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message })
   }
 };
 

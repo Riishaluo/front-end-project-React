@@ -24,6 +24,8 @@ router.get('/check-auth', userAuth.verifyToken, (req, res) => {
 router.get('/cart', userAuth.verifyToken, cartController.renderCart)
 router.post('/add-to-cart', userAuth.verifyToken, cartController.addToCart)
 router.post('/delete-cart', userAuth.verifyToken, cartController.deleteCart)
+router.post("/update-cart-quantity", userAuth.verifyToken,cartController.updateCartQuantity);
+
 
 // Payment
 router.get('/checkout', userAuth.verifyToken, paymentController.renderPayment)
